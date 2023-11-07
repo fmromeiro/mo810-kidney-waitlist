@@ -2,14 +2,18 @@ import pandas as pd
 
 def update_wins(mtx: dict[int,dict[int,int]], loser: int, cur_winner: int):
     for candidate in mtx[cur_winner]:
-        if mtx[cur_winner][candidate] == 1:
+        if mtx[cur_winner][candidate] == -1:
+            if loser in mtx[candidate]: continue
+
             mtx[candidate][loser] = 1
             mtx[loser][candidate] = -1
             update_wins(mtx, loser, candidate)
 
 def update_losses(mtx: dict[int,dict[int,int]], winner: int, cur_loser: int):
     for candidate in mtx[cur_loser]:
-        if mtx[cur_loser][candidate] == -1:
+        if mtx[cur_loser][candidate] == 1:
+            if winner in mtx[candidate]: continue
+
             mtx[candidate][winner] = -1
             mtx[winner][candidate] = 1
             update_losses(mtx, winner, candidate)
@@ -33,7 +37,7 @@ def voting_score(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
 
         p = row['p']
         winner, loser = 0
-        if p < threshold:
+        if p > threshold:
             winner, loser = idx_a, idx_b
         else:
             winner, loser = idx_b, idx_a
@@ -48,7 +52,7 @@ def voting_score(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
     while len(order) < len(idxs):
         for idx, scores in mtx.items():
             current_visit = set()
-            if all((x == 1 for i,x in scores.items() if i not in visited)):
+            if all(x == 1 for i,x in scores.items() if i not in visited):
                 order.append(idx)
                 current_visit.add(idx)
             visited.update(current_visit)
