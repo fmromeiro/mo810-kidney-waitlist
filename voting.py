@@ -60,8 +60,9 @@ def order_by_vote(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
 
 def concordance_score(y: list[int], y_hat: list[int]):
     s = 0
-    for i,a in enumerate(y):
-        y_r = set(y[i+1:])
+    y_r = set(y)
+    for a in y:
+        y_r.remove(a)
         y_hat_idx = y_hat.index(a)
         y_hat_r = set(y_hat[y_hat_idx+1:])
         s += len(y_r.intersection(y_hat_r))
