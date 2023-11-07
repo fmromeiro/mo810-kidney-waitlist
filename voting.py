@@ -1,18 +1,18 @@
 import pandas as pd
 
-def update_wins(mtx, loser, cur_winner):
+def update_wins(mtx: dict[int,dict[int,int]], loser: int, cur_winner: int):
     for candidate in mtx[cur_winner]:
         if mtx[cur_winner][candidate] == 1:
             mtx[candidate][loser] = 1
             mtx[loser][candidate] = -1
             update_wins(loser, candidate)
 
-def update_losses(mtx, winner, cur_loser):
+def update_losses(mtx: dict[int,dict[int,int]], winner: int, cur_loser: int):
     for candidate in mtx[cur_loser]:
         if mtx[cur_loser][candidate] == -1:
             mtx[candidate][winner] = -1
             mtx[winner][candidate] = 1
-            update_wins(winner, candidate)
+            update_losses(winner, candidate)
 
 def voting_score(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
     df = meta.copy()
