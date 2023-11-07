@@ -18,7 +18,7 @@ def update_losses(mtx: dict[int,dict[int,int]], winner: int, cur_loser: int):
             mtx[winner][candidate] = 1
             update_losses(mtx, winner, candidate)
 
-def voting_score(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
+def order_by_vote(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
     df = meta.copy()
     df['p'] = ps
     df.sort_values('p',inplace=True)
@@ -57,3 +57,13 @@ def voting_score(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
                 current_visit.add(idx)
             visited.update(current_visit)
     return order
+
+def concordance_score(y: list[int], y_hat: list[int]):
+    s = 0
+    for i,a in enumerate(y):
+        y_r = set(y[i+1:])
+        y_hat_idx = y_hat.index(a)
+        y_hat_r = set(y_hat[y_hat_idx+1:])
+        s += len(y_r.intersection(y_hat_r))
+
+    return 2 * s / (len(y) * (len(y) - 1))
