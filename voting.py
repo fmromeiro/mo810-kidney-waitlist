@@ -45,8 +45,11 @@ def voting_score(ps: pd.Series, meta: pd.DataFrame, threshold: float = 0.5):
 
     order = []
     visited = set()
-    for idx, scores in mtx.items():
-        if all((x == 1 for i,x in scores.items() if i not in visited)):
-            order.append(idx)
-            visited.add(idx)
+    while len(order) < len(idxs):
+        for idx, scores in mtx.items():
+            current_visit = set()
+            if all((x == 1 for i,x in scores.items() if i not in visited)):
+                order.append(idx)
+                current_visit.add(idx)
+            visited.update(current_visit)
     return order
