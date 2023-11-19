@@ -5,3 +5,4 @@ dask
 dask[diagnostics]
 ipykernel
 matplotlib
+fairlearn
