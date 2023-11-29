@@ -8,3 +8,5 @@ matplotlib
 fairlearn
 aif360
 holisticai
+tqdm
+cvxpy
